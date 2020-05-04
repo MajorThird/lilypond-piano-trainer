@@ -33,6 +33,7 @@ def normalize_folder_string(folder):
     Make sure that the folder names given in the input file
     contain / at the end.
     """
+    folder = folder.strip()
     if folder[-1] == "/":
         return folder
     else:
