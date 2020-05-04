@@ -28,8 +28,6 @@ def get_parser():
     return parser
 
 
-
-
 def normalize_folder_string(folder):
     """
     Make sure that the folder names given in the input file
@@ -72,5 +70,12 @@ def get_options():
     filename = parsed_arguments["config"]
     config = get_config(filename)
     options = get_options_from_config(config)
+    hand_string = "hands"
+    if options["play_left"]:
+        hand_string += "_left"
+    if options["play_right"]:
+        hand_string += "_right"
+
+    options["output_folder_complete"] = options["out_folder"] + options["song"] + "/" + hand_string + "/"
     replace_options_from_command_line(options, parsed_arguments)
     return options
