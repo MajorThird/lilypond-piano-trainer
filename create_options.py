@@ -1,5 +1,6 @@
 import argparse
 import configparser
+import os
 
 def get_config(filename):
     """
@@ -77,6 +78,7 @@ def get_options():
     if options["play_right"]:
         hand_string += "_right"
 
-    options["output_folder_complete"] = options["out_folder"] + options["song"] + "/" + hand_string + "/"
+
+    options["output_folder_complete"] = os.path.join(options["out_folder"], options["song"], hand_string)
     replace_options_from_command_line(options, parsed_arguments)
     return options
