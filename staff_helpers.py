@@ -1,6 +1,6 @@
 import mingus.containers
-import re
 import mingus.core.intervals
+import re
 
 def remove_comments(src):
     # src_clean = ""
