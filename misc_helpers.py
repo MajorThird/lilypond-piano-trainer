@@ -1,3 +1,28 @@
+import shutil
+import os
+
+def delete_and_create_folder(f):
+    if os.path.isdir(f):
+        shutil.rmtree(f)
+    os.makedirs(f) # works recursively
+
+
+def write_debug_file(staffs, folder):
+    outstr = ""
+    outstr += "\\new GrandStaff   <<\n"
+    for s in staffs:
+        outstr += "\\new Staff {\n"
+        outstr += s.complete_lily_string
+        outstr += "\n"
+        outstr += "}"
+        outstr += "\n"
+        outstr += "\n"
+        outstr += "\n"
+    outstr += ""
+    outstr += " >>"
+    with open(folder + "/debug.ly", "w") as outfile:
+        outfile.write(outstr)
+
 
 def get_folder_hand_string(options):
     """
