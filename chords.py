@@ -1,4 +1,4 @@
-import misc_helpers
+import staff_helpers
 from fractions import Fraction
 
 
@@ -13,7 +13,7 @@ class Chord(object):
 def get_chords(filename):
     with open(filename) as infile:
         content = infile.read()
-        content = misc_helpers.remove_comments(content)
+        content = staff_helpers.remove_comments(content)
         content = content.replace("{", "{ ")
         content = content.replace("}", " }")
         content = content.replace("\n", " ")
