@@ -1,6 +1,7 @@
 import argparse
 import configparser
 import os
+import misc_helpers
 
 def get_config(filename):
     """
@@ -42,8 +43,7 @@ def normalize_folder_string(folder):
 
 
 def get_options_from_config(config):
-    # used to convert option strings to boolean
-    true_strings = ["True", "true", "t", "T", "1"]
+    true_strings = misc_helpers.get_true_strings()
 
     options = {}
     options["song"] = config["MAKE_OPTIONS"]["song"]
@@ -58,7 +58,7 @@ def get_options_from_config(config):
 
 
 def replace_options_from_command_line(options, args):
-    true_strings = ["True", "true", "t", "T", "1"]
+    true_strings = misc_helpers.get_true_strings()
     if args["song"]:
         options["song"] = args["song"]
     if args["left"]:
@@ -67,11 +67,7 @@ def replace_options_from_command_line(options, args):
         options["play_right"] = True if args["right"] in true_strings else False
 
 def create_complete_paths(options):
-    hand_string = "hands"
-    if options["play_left"]:
-        hand_string += "_left"
-    if options["play_right"]:
-        hand_string += "_right"
+    hand_string = misc_helpers.get_folder_hand_string(options)
     options["output_folder_complete"] = os.path.join(options["out_folder"], options["song"], hand_string)
     options["lily_file"] = os.path.join(options["in_folder"], options["song"] + ".ly")
 
