@@ -66,19 +66,25 @@ def replace_options_from_command_line(options, args):
     if args["right"]:
         options["play_right"] = True if args["right"] in true_strings else False
 
+def create_complete_paths(options):
+    hand_string = "hands"
+    if options["play_left"]:
+        hand_string += "_left"
+    if options["play_right"]:
+        hand_string += "_right"
+    options["output_folder_complete"] = os.path.join(options["out_folder"], options["song"], hand_string)
+    options["lily_file"] = os.path.join(options["in_folder"], options["song"] + ".ly")
+
+
 def get_options():
     parser = get_parser()
     parsed_arguments = vars(parser.parse_args())
     filename = parsed_arguments["config"]
     config = get_config(filename)
     options = get_options_from_config(config)
-    hand_string = "hands"
-    if options["play_left"]:
-        hand_string += "_left"
-    if options["play_right"]:
-        hand_string += "_right"
 
 
-    options["output_folder_complete"] = os.path.join(options["out_folder"], options["song"], hand_string)
     replace_options_from_command_line(options, parsed_arguments)
+    create_complete_paths(options)
+
     return options
