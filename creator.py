@@ -8,7 +8,7 @@ def main():
     misc_helpers.delete_and_create_folder(options["output_folder_complete"])
     staffs = staff.get_staffs(options["lily_file"])
     misc_helpers.write_debug_file(staffs, options["output_folder_complete"])
-    all_chord_symbols = chords.get_chords(filename)
+    all_chord_symbols = chords.get_chords(options["lily_file"])
 
 
 if __name__ == '__main__':
