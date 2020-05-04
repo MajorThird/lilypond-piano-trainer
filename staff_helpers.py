@@ -182,7 +182,6 @@ def get_without_repeats(s):
 
     index_start_copy = 0
     if len(positions) > 0:
-        #print(s)
         for position in positions:
             number_of_repeats = get_number_of_repeats(position, repeat_string, s)
             start_position = position + len(repeat_string) + 2 + len(str(number_of_repeats))
