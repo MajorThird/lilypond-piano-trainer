@@ -3,9 +3,6 @@ import mingus.core.intervals
 import re
 
 def remove_comments(src):
-    # src_clean = ""
-    # for line in src.split("\n"):
-    #     src_clean += line.split("#")[0] + "\n"
     src_clean = re.sub(re.compile("%{.*?%}",re.DOTALL ), "" , src)
     return src_clean
 
@@ -59,7 +56,6 @@ def get_color_mapping(action_notes, chord_root, staff_index_str):
         root_str = a.replace("'", "").replace(",","").replace("is", "").replace("es", "")
         root = root_dict[root_str]
         alteration_str = alterations_dict[alteration]
-        # print("test", a, octave, alteration, root)
         if chord_root:
             note_color = get_note_color(a.replace("'", "").replace(",",""), chord_root)
         else:
@@ -67,7 +63,6 @@ def get_color_mapping(action_notes, chord_root, staff_index_str):
         color_mapping += "(cons (ly:make-pitch %i %i %s) (x11-color '%s))\n" % ( octave, root, alteration_str, note_color)
 
     color_mapping += "))\n\n"
-    #print(color_mapping)
     return color_mapping
 
 def get_color_dictionary():
@@ -91,8 +86,6 @@ def get_note_color(note_str, chord_root):
     mingus_note_str = convert_to_mingus_root_notation(note_str)
 
     distance = mingus.core.intervals.measure(mingus_chord_root, mingus_note_str) # immer positiv
-
-    #print("interval", mingus_chord_root, mingus_note_str, distance)
     note_color = get_color_dictionary()[distance]
     return note_color
 
@@ -123,9 +116,7 @@ def get_normalized_staff_strings(staffs):
         s = s.replace(" ~", "~")
         s = get_without_repeats(s)
 
-        s.replace("  ", " ") # sicherheitshalber
-        #print(s)
-        #print("\n"*10)
+        s.replace("  ", " ") # just in case something went wrong
         normalized.append(s)
     return normalized
 
@@ -142,9 +133,6 @@ def get_with_normalized_spaces(s):
 
 def get_staff_string_without_unwanted_commands(s):
     commands = []
-    # commands.append("")
-    # commands.append("\")
-
     commands.append("\\override Staff.NoteCollision.merge-differently-dotted = ##t")
     commands.append("\\!")
     commands.append("\\>")
@@ -185,7 +173,6 @@ def get_position_of_closing_bracket(start_position, s, start_bracket="{", end_br
             number_open += 1
         elif character == end_bracket:
             number_close += 1
-    #print("test", s[start_position], current_position)
     return current_position
 
 def get_without_repeats(s):
