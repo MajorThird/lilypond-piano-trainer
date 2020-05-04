@@ -82,5 +82,6 @@ def get_options():
 
     replace_options_from_command_line(options, parsed_arguments)
     create_complete_paths(options)
+    options["staff_activations"] = [options["play_right"], options["play_left"]]
 
     return options
