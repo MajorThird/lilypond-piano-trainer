@@ -1,3 +1,10 @@
+####################################################
+####################################################
+####################################################
+##### THIS IS A BIG MESS. I'M SORRY. ###############
+####################################################
+####################################################
+####################################################
 from fractions import Fraction
 import staff_helpers
 
@@ -16,7 +23,6 @@ class NoteContainer(object):
         ret_str += ": " + str(self.notes).replace("[","").replace("]", "").replace(", ", "+")
         hold_characters = [str(b)[0] for b in self.hold_info]
         ret_str += ": " + str(hold_characters).replace("'","").replace("[","").replace("]", "").replace(", ", "-")
-        # print("test", self.start_time, ret_str)
         return ret_str
 
 
@@ -25,7 +31,6 @@ def get_staffs(filename="test.ly"):
     with open(filename) as infile:
         content = infile.read()
         content = staff_helpers.remove_comments(content)
-        # print(content)
         content = content.replace("{", "{ ")
         content = content.replace("}", " }")
         content = content.replace("\n", " ")
@@ -165,9 +170,7 @@ def modify_grace_note_stream(total_stream, grace_note_stream):
         if type(elem) != list:
             if elem == "\\grace":
                 grace_note_stream[index] = True
-                # print("Hallo")
                 if total_stream[index + 1] == "{":
-                    # print("Klammer")
                     grace_note_stream[index + 1] = True
                     add_index = 2
                     bracket_closed = False
@@ -176,10 +179,8 @@ def modify_grace_note_stream(total_stream, grace_note_stream):
                         if next_elem == "}":
                             grace_note_stream[index + add_index] = True
                             bracket_closed = True
-                            # print("klammer zu")
                         else:
                             grace_note_stream[index + add_index] = True
-                            # print(next_elem)
                             add_index += 1
                 else:
                     grace_note_stream[index + 1] = True
@@ -191,8 +192,6 @@ def modify_grace_note_stream(total_stream, grace_note_stream):
 
 
 def get_note_stream_without_holds(note_stream):
-    # nc = NoteContainer(start_time=note_stream[0].start_time, notes=note_stream[0].notes)
-    # note_stream_without_holds = [nc]
     note_stream_without_holds = []
     for index, elem in enumerate(note_stream):
         if type(elem) != list:
@@ -213,10 +212,8 @@ def get_note_stream_without_holds(note_stream):
                 prev_hold = note_stream[index-1].hold_info
                 hold = [n for i, n in enumerate(prev_notes) if prev_hold[i] == True]
                 actually_played = [n for n in elem.notes if not n in hold]
-            # if len(actually_played) > 0:
             nc = NoteContainer(start_time=elem.start_time, notes=actually_played)
             note_stream_without_holds.append(nc)
-                # print("prev", nc.notes, hold)
         else:
             if index == 0:
                 hold_before_first = []
@@ -237,7 +234,6 @@ def get_note_stream_without_holds(note_stream):
                         notes = sub_stream[sub_elem_index].notes
                         time = sub_stream[sub_elem_index].start_time
                         if sub_elem_index == 0:
-                            #print("hold", hold_before_first, index)
                             hold = hold_before_first
                         else:
                             prev_notes = sub_stream[sub_elem_index-1].notes
@@ -246,7 +242,6 @@ def get_note_stream_without_holds(note_stream):
 
                         actually_played = [n for n in notes if not n in hold]
                         nc = NoteContainer(start_time=time, notes=actually_played)
-                        # if len(actually_played) > 0:
                         note_stream_without_holds_sub[sub_index].append(nc)
             note_stream_without_holds.append(note_stream_without_holds_sub)
 
@@ -257,7 +252,6 @@ def get_note_stream(total_stream, res_is_note, res_is_chord_end, calculated_star
     note_stream = []
     for index, elem in enumerate(total_stream):
         if type(elem) != list:
-            # not "\\rest" in elem denn auch pausen mit rest werden als note gezaehlt
             if res_is_note[index] and not grace_note_stream[index] and not "\\rest" in elem:
                 isolated = get_isolated_fragment(elem, remove_octave_characters=False)
                 hold = True if "~" in elem else False
@@ -273,7 +267,7 @@ def get_note_stream(total_stream, res_is_note, res_is_chord_end, calculated_star
                         if hold:
                             note_stream[-1].hold_info.append(True)
                             if res_is_chord_end[index] and "~" in elem.split(">")[1]:
-                                note_stream[-1].hold_info = [True for i in range(len(note_stream[-1].hold_info))] # akkordende: alle sind hold notes
+                                note_stream[-1].hold_info = [True for i in range(len(note_stream[-1].hold_info))]
                         else:
                             note_stream[-1].hold_info.append(False)
 
@@ -287,8 +281,10 @@ def get_note_stream(total_stream, res_is_note, res_is_chord_end, calculated_star
 
     return note_stream
 
-# einige noten enthalten keine zahlen. fuege sie hinzu.
 def add_note_lengths(total_stream, calculated_note_lengths, calculated_belongs_to_chord_without_end, res_is_chord_end, res_is_note, res_is_pause):
+    """
+    Some notes do not contain note values. They are added here.
+    """
     for index, elem in enumerate(total_stream):
         if type(elem) != list:
             elem_digits = get_digits(total_stream, index)   #''.join([c for c in elem if c.isdigit()])
@@ -339,7 +335,6 @@ def determine_bars(time_signature_changes, max_time):
 
 
 def find_key_changes(total_stream, calculated_start_times):
-    #key_changes = [(Fraction(-9999999,1), "c \\major")]
     key_changes = []
     for index, elem in enumerate(total_stream):
         if type(elem) == list:
@@ -350,11 +345,9 @@ def find_key_changes(total_stream, calculated_start_times):
                 start_time = calculated_start_times[index]
                 key = total_stream[index + 1] + " " + total_stream[index + 2]
                 key_changes.append((start_time, key))
-    #print("keys", key_changes)
     return key_changes
 
 def find_clef_changes(total_stream, calculated_start_times):
-    #clef_changes = [(Fraction(-9999999,1), "bass")]
     clef_changes = []
     for index, elem in enumerate(total_stream):
         if type(elem) == list:
@@ -387,17 +380,6 @@ def find_time_signature_changes(total_stream, calculated_start_times):
                 time_signature_changes_strings.append((start_time, signature_str))
     return time_signature_changes, time_signature_changes_strings
 
-#
-# def correct_start_times_time_changes(calculated_start_times, total_stream):
-#     for index, time in enumerate(calculated_start_times):
-#         if type(time) == list:
-#             for sub_index, sub_times in enumerate(time):
-#                 correct_start_times_time_changes(sub_times, total_stream[index][sub_index])
-#         else:
-#             if total_stream[index] == "\\time":
-#                 delta_index = 2
-#                 for i in range(delta_index):
-#                     calculated_start_times[index + i] = calculated_start_times[index + delta_index]
 
 def correct_start_times_octave_marks(calculated_start_times, total_stream):
     for index, elem in enumerate(total_stream):
@@ -406,24 +388,20 @@ def correct_start_times_octave_marks(calculated_start_times, total_stream):
                 correct_start_times_octave_marks(calculated_start_times[index][sub_index], sub_stream)
         else:
             if elem == "\\ottava":
-                # find next note
                 add_index = 0
                 found = False
                 while not found:
                     next_index = index + add_index
-                    # next_elem = total_stream[next_index]
                     if type(total_stream[next_index]) == list:
                         next_start_times = [l[0] for l in calculated_start_times[next_index]]
                         next_start_time = min(next_start_times)
                         found = True
                     elif is_note(total_stream, next_index) or is_pause(total_stream, next_index):
-                        #print("Testtest")
                         next_start_time = calculated_start_times[next_index]
                         found = True
                     add_index += 1
                 calculated_start_times[index] = next_start_time
                 calculated_start_times[index + 1] = next_start_time
-
 
 
 def correct_start_times_tuples(calculated_start_times, res_tuplet_tag):
@@ -436,13 +414,14 @@ def correct_start_times_tuples(calculated_start_times, res_tuplet_tag):
                 delta_index = 3
                 for i in range(delta_index):
                     calculated_start_times[index + i] = calculated_start_times[index + delta_index]
-                    # print(calculated_start_times[index + i])
 
 
-# die anfaenge von akkorden haben falsche notenlaengen (noch die von den noten davor).
-# deshalb werden die dann auf den wert gesetzt, den das akkordende hat.
-# evtl braucht man das nicht, weil gar nicht die zeit proceedet wird an dieser stelle
 def correct_note_lengths_in_chords(stream_for_correction, calculated_belongs_to_chord_without_end):
+    """
+    Elements of a chord with the exception of the last note of the chord
+    might have wrong note values. They are set the value defined
+    after the last note of the chord.
+    """
     for index, elem in enumerate(stream_for_correction):
         if type(elem) == list:
             for sub_index, sub_elem in enumerate(elem):
@@ -499,36 +478,6 @@ def calculate_start_times(calculated_does_advance_time, calculated_total_note_le
                 next_time = next_time + length
     return start_times
 
-# def get_previous_end_time(index, calculated_end_times):
-#     if index == 0:
-#         return Fraction(0)
-#     elif type(calculated_end_times[index-1]) == list:
-#         return calculated_end_times[index-1][-1][-1]
-#     else:
-#         return calculated_end_times[index-1]
-#
-# def calculate_start_times(calculated_end_times):
-#     start_times = []
-#     for index, end_time in enumerate(calculated_end_times):
-#         if type(end_time) == list:
-#             start_times.append([])
-#             for l_index, l in enumerate(end_time):
-#                 start_times[-1].append([])
-#                 for sub_index, sub_end_time in enumerate(l):
-#                     if sub_index > 0:
-#                         start_times[-1][-1].append(calculated_end_times[index][l_index][sub_index-1])
-#                         # start_times[-1][-1].append(777)
-#                     else:
-#                         if type(calculated_end_times[index-1]) != list:
-#                             start_times[-1][-1].append(calculated_end_times[index-1])
-#                         else:
-#                             start_times[-1][-1].append(calculated_end_times[index-1][-1][-1])
-#
-#         else:
-#             start_times.append(get_previous_end_time(index, calculated_end_times))
-#     return start_times
-
-
 
 def calculate_for_stream(value_streams, f, prev_res_init, previous_res_mode="chronological"):
     result = []
@@ -554,21 +503,8 @@ def calculate_for_stream(value_streams, f, prev_res_init, previous_res_mode="chr
             res = f(prev_result, *values)
             result.append(res)
             prev_result = res
-        #print("res", result)
     return result, prev_result
 
-    # prev_result = prev_res_init
-    # for index, elem in enumerate(stream):
-    #     if type(elem) == list:
-    #         for sub_index, s in enumerate(elem):
-    #             value_sub = [vs[sub_index] for vs in value_streams]
-    #             res = calculate_for_stream(s, value_sub, f, prev_result)
-    #             # fehlt noch was
-    #     else:
-    #         res = f(stream, index, prev_result, *value_streams)
-    #         result.append(res)
-    #         prev_result = res
-    # return result, prev_result
 
 def get_end_times(prev_result, does_advance_time, note_length):
     if does_advance_time:
@@ -675,18 +611,6 @@ def debug_list(lst, to_float=True):
 
 
 
-
-#########################################################
-#########################################################
-#########################################################
-#########################################################
-#########################################################
-#########################################################
-#########################################################
-#########################################################
-#########################################################
-#########################################################
-
 def get_digits(stream, i):
     if "-" in  stream[i]:
         element = stream[i].split("-")[0]
@@ -708,9 +632,6 @@ def get_note_names():
 
 
 def is_note(stream, i):
-    # if is_pause(stream, i):
-    #     return False
-    # else:
     element = stream[i]
     isolated = get_isolated_fragment(element)
     note_names = get_note_names()
@@ -751,7 +672,6 @@ def get_dot_factor(stream, index):
         n = 0
     tmp = Fraction(1,2**n)
     factor = Fraction(2,1) - tmp
-    #print(factor)
     return factor
 
 
