@@ -51,8 +51,8 @@ def get_options_from_config(config):
     options["play_left"] = True if config["MAKE_OPTIONS"]["play_left"] in true_strings else False
     options["in_folder"] = normalize_folder_string(config["MAKE_OPTIONS"]["in_folder"])
     options["out_folder"] = normalize_folder_string(config["MAKE_OPTIONS"]["out_folder"])
-    options["image_width"] = int(config["MAKE_OPTIONS"]["image_width"])
-    options["image_height"] = int(config["MAKE_OPTIONS"]["image_height"])
+    options["image_width"] = int(config["SHARED_OPTIONS"]["screen_width"])
+    options["image_height"] = int(config["SHARED_OPTIONS"]["screen_height"])
     options["image_resolution"] = int(config["MAKE_OPTIONS"]["image_resolution"])
     return options
 
