@@ -5,17 +5,33 @@ import staff_helpers
 import chords
 from fractions import Fraction
 import os
+import sys
 import subprocess
 import cv2
 
 
+
+def print_progress(info):
+    """
+    This keeps the output on the same line.
+    """
+
+    text = "\r"
+    for s, value in info:
+        text += s + ": {:10s}   ".format(str(value))
+    sys.stdout.write(text)
+    sys.stdout.flush()
+
+
+
 def resize_images(output_folder, new_width, new_height):
     file_index = 0
+    print("Resize images.")
     while True:
         filename = output_folder + "%05i.png" % file_index
         if os.path.isfile(filename):
+            print_progress([("file", file_index)])
             img = cv2.imread(filename)
-            print("resize", file_index)
             height = img.shape[0]
             width = img.shape[1]
             if float(width) / float(height) > float(new_width)/new_height:
@@ -31,6 +47,7 @@ def resize_images(output_folder, new_width, new_height):
             file_index += 1
         else:
             break
+    print("")
 
 
 
@@ -336,6 +353,7 @@ def main():
     actions = get_actions(staffs, options["staff_activations"])
 
     note_positions = []
+    print("Create pngs in " + options["output_folder_complete"])
     for step, action in enumerate(actions[0:]):
         time = action[0]
         action_notes = action[1]
@@ -359,7 +377,9 @@ def main():
         time_signature_changes.append( (Fraction(-999999999999,1), "4/4") )
         time_signature_changes = sorted(time_signature_changes, key = lambda x : x[0])
 
-        print("make file #"  + str(step) + " bar: " + str(bar_no) + " time: " + str(float(time)))
+
+
+        print_progress([("file", str(step)), ("bar", str(bar_no)), ("time", str(float(time)))])
         staff_strings = []
         mingus_notes = []
         chord_symbols = [c for c in all_chord_symbols if (c.time >= bar_start and c.time < bar_end) ]
@@ -376,7 +396,7 @@ def main():
         create_midi_notes_output(mingus_notes, options["output_folder_complete"])
         create_lily_output(step, staff_strings, chord_symbols, options["output_folder_complete"], options["image_resolution"])
         create_timing_info_output(time, options["output_folder_complete"])
-
+    print("") # new linef
     resize_images(options["output_folder_complete"], options["image_width"], options["image_height"])
 
 
