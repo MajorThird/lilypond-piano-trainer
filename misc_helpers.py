@@ -20,7 +20,7 @@ def write_debug_file(staffs, folder):
         outstr += "\n"
     outstr += ""
     outstr += " >>"
-    with open(folder + "/debug.ly", "w") as outfile:
+    with open(folder + "debug.ly", "w") as outfile:
         outfile.write(outstr)
 
 
