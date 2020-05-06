@@ -53,7 +53,7 @@ def get_options_from_config(config):
     options["out_folder"] = normalize_folder_string(config["MAKE_OPTIONS"]["out_folder"])
     options["image_width"] = int(config["MAKE_OPTIONS"]["image_width"])
     options["image_height"] = int(config["MAKE_OPTIONS"]["image_height"])
-
+    options["image_resolution"] = int(config["MAKE_OPTIONS"]["image_resolution"])
     return options
 
 
@@ -68,7 +68,7 @@ def replace_options_from_command_line(options, args):
 
 def create_complete_paths(options):
     hand_string = misc_helpers.get_folder_hand_string(options)
-    options["output_folder_complete"] = os.path.join(options["out_folder"], options["song"], hand_string)
+    options["output_folder_complete"] = os.path.join(options["out_folder"], options["song"], hand_string) + "/"
     options["lily_file"] = os.path.join(options["in_folder"], options["song"] + ".ly")
 
 
