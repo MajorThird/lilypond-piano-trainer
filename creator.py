@@ -47,7 +47,7 @@ def resize_images(output_folder, new_width, new_height):
             file_index += 1
         else:
             break
-    print("")
+    print("") # new line
 
 
 
@@ -396,7 +396,7 @@ def main():
         create_midi_notes_output(mingus_notes, options["output_folder_complete"])
         create_lily_output(step, staff_strings, chord_symbols, options["output_folder_complete"], options["image_resolution"])
         create_timing_info_output(time, options["output_folder_complete"])
-    print("") # new linef
+    print("") # new line
     resize_images(options["output_folder_complete"], options["image_width"], options["image_height"])
 
 
