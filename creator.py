@@ -123,21 +123,13 @@ def create_midi_notes_output(mingus_notes, output_folder):
         midi_notes = sorted([str(int(n)) for n in mingus_notes])
         # remove duplicates
         midi_notes = sorted(list(set(midi_notes)))
-
-        # notes = sorted(mingus_notes, key = lambda x : int(x))
-        #notes_strings = [str(n).replace("'", "") for n in notes]
         outfile.write(" ".join(midi_notes) + "\n")
     with open(output_folder + "mingus_notes.txt", "a") as outfile:
         mingus_notes = sorted([str(n).replace("'", "") for n in mingus_notes])
-        # notes = sorted(mingus_notes, key = lambda x : int(x))
-        #notes_strings = [str(n).replace("'", "") for n in notes]
         outfile.write(" ".join(mingus_notes) + "\n")
 
 
 def modify_staff_string_with_color(staff_string, staff_index, stream, index, elem, action_notes, chord_root, calculated_belongs_to_chord_without_end):
-    # ueberpruefe, ob note in actions enthalten ist
-    # wenn das nicht gemacht wird, koennen gehaltene noten
-    # auch markiert werden
     is_chord_note = calculated_belongs_to_chord_without_end[index] or ">" in elem
     is_first_chord_note = "<" in elem
     if is_chord_note:
@@ -145,7 +137,6 @@ def modify_staff_string_with_color(staff_string, staff_index, stream, index, ele
             modify = True
         else:
             modify = False
-            # print("Chord notes are not treated.", elem)
     else:
         modify = True
 
@@ -188,7 +179,6 @@ def get_initial_time_signature(bar_start, time_signature_changes):
 
 
 def get_initial_key(bar_start, key_changes):
-    # print("keys_in_function", key_changes)
     for index, k in enumerate(key_changes):
         if key_changes[index][0] <= bar_start:
             # print(index, k)
@@ -201,21 +191,16 @@ def get_initial_key(bar_start, key_changes):
 
 
 
-# gib string fuer speziellen start und end aus
 def create_staff_string(bar_start, bar_end, time, action_notes, chord_symbols, staff, staff_index, active, key_changes, time_signature_changes):
     initial_key = get_initial_key(bar_start, key_changes)
     initial_clef = get_initial_clef(bar_start, staff.clef_changes)
     initial_time_signature = get_initial_time_signature(bar_start, time_signature_changes)
-    # print("initial_key", initial_key)
     staff_string = ""
     staff_string += " \\key " + initial_key[1]
     staff_string += " \\clef " + initial_clef[1]
     staff_string += " \\time " + initial_time_signature[1]
-    #print("========== create", time)
     stream = staff.total_stream
     for index, elem in enumerate(stream):
-
-
         if type(elem) != list:
             elem_time = staff.calculated_start_times[index]
             if elem_time >= bar_start and elem_time < bar_end:
@@ -225,7 +210,6 @@ def create_staff_string(bar_start, bar_end, time, action_notes, chord_symbols, s
                 staff_string += " " + elem
 
         else:
-            #print("test", elem)
             sub_staff_strings = []
             for sub_index, sub_stream in enumerate(elem):
                 sub_staff_string = ""
@@ -235,18 +219,8 @@ def create_staff_string(bar_start, bar_end, time, action_notes, chord_symbols, s
                         if staff.res_is_note[index][sub_index][sub_elem_index] and time == elem_time and not staff.grace_note_stream[index][sub_index][sub_elem_index]:
                             sub_stream = stream[index][sub_index]
                             sub_calculated_belongs_to_chord_without_end = staff.calculated_belongs_to_chord_without_end[index][sub_index]
-                            # eventuell ist hier das problem, dass staff_index mehrfach vorkommt, pruefen
                             chord_root = get_chord_root(chord_symbols, elem_time)
                             sub_staff_string = modify_staff_string_with_color(sub_staff_string, staff_index, sub_stream, sub_elem_index, sub_elem, action_notes, chord_root, sub_calculated_belongs_to_chord_without_end)
-
-                            #
-                            # # ueberpruefe, ob note in actions enthalten ist
-                            # # wenn das nicht gemacht wird, koennen gehaltene noten
-                            # # auch markiert werden
-                            # red_note = get_isolated_fragment(sub_elem, remove_octave_characters=False)
-                            # if red_note in action_notes:
-                            #     color_string = "\\once \\override NoteHead.color = #red \\once \\override Stem.color = #red"
-                            #     sub_staff_string += " " + color_string
                         sub_staff_string += " " + sub_elem
                 if sub_staff_string != "":
                     sub_staff_strings.append(sub_staff_string)
@@ -264,16 +238,6 @@ def create_staff_string(bar_start, bar_end, time, action_notes, chord_symbols, s
                     if s_ind < len(sub_staff_strings) - 1:
                         staff_string += " \\\\"
                 staff_string += " >>"
-
-
-                # if sub_index < len(elem) - 1:
-                #     sub_staff_string += " \\\\"
-
-            # sub_staff_string += " >>"
-            # staff_string += sub_staff_string
-
-
-    #print("staff_string", staff_string)
     return staff_string
 
 
@@ -340,7 +304,7 @@ def get_actions(staffs, staff_activations):
 
 
 def main():
-    options = create_options.get_options()
+    options = options_creator.get_options()
     misc_helpers.delete_and_create_folder(options["output_folder_complete"])
     staffs = staff.get_staffs(options["lily_file"])
     misc_helpers.write_debug_file(staffs, options["output_folder_complete"])
