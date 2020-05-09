@@ -106,8 +106,6 @@ class SoundGame(object):
         pygame.mixer.init()
 
         # display
-        self.display_width = 1920
-        self.display_height = 900
         full_screen = False
         full_screen = True
         if full_screen:
