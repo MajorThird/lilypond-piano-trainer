@@ -11,14 +11,16 @@ import cv2
 
 
 
-def print_progress(info):
+def print_progress(info, long=False):
     """
     This keeps the output on the same line.
     """
-
     text = "\r"
     for s, value in info:
-        text += s + ": {:10s}   ".format(str(value))
+        if long:
+            text += s + ": {:40s}   ".format(str(value))
+        else:
+            text += s + ": {:10s}   ".format(str(value))
     sys.stdout.write(text)
     sys.stdout.flush()
 
@@ -27,26 +29,31 @@ def print_progress(info):
 def resize_images(output_folder, new_width, new_height):
     file_index = 0
     print("Resize images.")
+    filenames = [output_folder + "presentation_mode_start.png"]
+
     while True:
         filename = output_folder + "%05i.png" % file_index
         if os.path.isfile(filename):
-            print_progress([("file", file_index)])
-            img = cv2.imread(filename)
-            height = img.shape[0]
-            width = img.shape[1]
-            if float(width) / float(height) > float(new_width)/new_height:
-                scale = float(new_width) / width
-                new_size = (int(round(scale * width)), int(round(scale * height)))
-                img = cv2.resize(img, new_size)
-            else:
-                scale = float(new_height) / height
-                new_size = (int(round(scale * width)), int(round(scale * height)))
-                img = cv2.resize(img, new_size)
-            cv2.imwrite(filename, img)
-
+            filenames.append(filename)
             file_index += 1
         else:
             break
+
+    for filename in filenames:
+        print_progress([("file", filename.split("/")[-1])], long=True)
+        img = cv2.imread(filename)
+        height = img.shape[0]
+        width = img.shape[1]
+        if float(width) / float(height) > float(new_width)/new_height:
+            scale = float(new_width) / width
+            new_size = (int(round(scale * width)), int(round(scale * height)))
+            img = cv2.resize(img, new_size)
+        else:
+            scale = float(new_height) / height
+            new_size = (int(round(scale * width)), int(round(scale * height)))
+            img = cv2.resize(img, new_size)
+        cv2.imwrite(filename, img)
+
     print("") # new line
 
 
@@ -68,7 +75,9 @@ def clean_output_folder(output_folder, del_png=False, del_lily=False, del_txt=Fa
         os.system("rm " + output_folder + "cropped/*.png 2>/dev/null")
 
 
-def create_lily_output(step, staff_strings, chord_symbols, output_folder, image_resolution):
+def create_lily_output(step, staff_strings, chord_symbols, output_folder, image_resolution, filename=None):
+    if not filename:
+        filename = "%05i" % step
     complete_lilypond_string = ""
     lily_front_filename = "lily_front.ly"
 
@@ -89,13 +98,14 @@ def create_lily_output(step, staff_strings, chord_symbols, output_folder, image_
     with open("lily_back.ly") as infile:
         complete_lilypond_string += infile.read()
 
-    with open(output_folder + "%05i.ly" % step, "w") as outfile:
+    with open(output_folder + filename + ".ly", "w") as outfile:
         outfile.write(complete_lilypond_string)
 
 
     with open(os.devnull, 'wb') as quiet_output:
-        outfilename = output_folder + "%05i" % step
-        subprocess.call(["lilypond", "-dbackend=eps", "-dresolution=%i" % image_resolution, "--png", "-o", outfilename, output_folder + "%05i.ly" % step], stdout=quiet_output, stderr=quiet_output)
+        outfilename = output_folder + filename
+        subprocess.call(["lilypond", "-dbackend=eps", "-dresolution=%i" % image_resolution,
+                "--png", "-o", outfilename, output_folder + filename + ".ly"], stdout=quiet_output, stderr=quiet_output)
         if not os.path.isfile(outfilename + ".png"):
             print("ERROR: no PNG written!!!!!!!!!!!!!")
 
@@ -361,6 +371,22 @@ def main():
         create_midi_notes_output(mingus_notes, options["output_folder_complete"])
         create_lily_output(step, staff_strings, chord_symbols, options["output_folder_complete"], options["image_resolution"])
         create_timing_info_output(time, options["output_folder_complete"])
+
+        # make first image for presentation mode (only black notes)
+        if step == 0:
+            staff_strings = []
+            for st_index, st in enumerate(staffs):
+                color_mode = "all_black"
+                staff_string = create_staff_string(bar_start, bar_end, time,
+                            current_notes, chord_symbols, st, st_index,
+                            options["staff_activations"][st_index], key_changes,
+                            time_signature_changes, color_mode)
+                show_staffs = [True, True]
+                if show_staffs[st_index]:
+                    staff_strings.append(staff_string)
+            create_lily_output(0, staff_strings, chord_symbols, options["output_folder_complete"], options["image_resolution"], filename="presentation_mode_start")
+
+
     print("") # new line
     resize_images(options["output_folder_complete"], options["image_width"], options["image_height"])
 

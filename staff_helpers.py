@@ -88,6 +88,8 @@ def get_note_color(note_str, chord_root, color_mode):
         mingus_chord_root = convert_to_mingus_root_notation(chord_root)
         distance = mingus.core.intervals.measure(mingus_reference_note, mingus_chord_root) # always positive
         note_color = get_color_dictionary()[distance]
+    elif color_mode == "all_black":
+        note_color = "black"
     else:
         mingus_chord_root = convert_to_mingus_root_notation(chord_root)
         mingus_note_str = convert_to_mingus_root_notation(note_str)
