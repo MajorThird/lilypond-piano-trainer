@@ -1,6 +1,19 @@
 import shutil
 import os
 
+
+def normalize_folder_string(folder):
+    """
+    Make sure that the folder names given in the input file
+    contain / at the end.
+    """
+    folder = folder.strip()
+    if folder[-1] == "/":
+        return folder
+    else:
+        return folder + "/"
+
+
 def delete_and_create_folder(f):
     if os.path.isdir(f):
         shutil.rmtree(f)

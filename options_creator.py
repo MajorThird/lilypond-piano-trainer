@@ -30,16 +30,6 @@ def get_parser():
     return parser
 
 
-def normalize_folder_string(folder):
-    """
-    Make sure that the folder names given in the input file
-    contain / at the end.
-    """
-    folder = folder.strip()
-    if folder[-1] == "/":
-        return folder
-    else:
-        return folder + "/"
 
 
 def get_options_from_config(config):
@@ -49,8 +39,8 @@ def get_options_from_config(config):
     options["song"] = config["MAKE_OPTIONS"]["song"]
     options["play_right"] = True if config["MAKE_OPTIONS"]["play_right"] in true_strings else False
     options["play_left"] = True if config["MAKE_OPTIONS"]["play_left"] in true_strings else False
-    options["in_folder"] = normalize_folder_string(config["MAKE_OPTIONS"]["in_folder"])
-    options["out_folder"] = normalize_folder_string(config["MAKE_OPTIONS"]["out_folder"])
+    options["in_folder"] = misc_helpers.normalize_folder_string(config["MAKE_OPTIONS"]["in_folder"])
+    options["out_folder"] = misc_helpers.normalize_folder_string(config["MAKE_OPTIONS"]["out_folder"])
     options["image_width"] = int(config["SHARED_OPTIONS"]["screen_width"])
     options["image_height"] = int(config["SHARED_OPTIONS"]["screen_height"])
     options["image_resolution"] = int(config["MAKE_OPTIONS"]["image_resolution"])
