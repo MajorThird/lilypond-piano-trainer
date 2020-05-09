@@ -20,9 +20,9 @@ def get_staff_strings(content):
     return staff_strings
 
 
-def create_color_string(action_notes, chord_root, staff_index):
+def create_color_string(action_notes, chord_root, staff_index, color_mode):
     staff_index_str = "-" + str(staff_index)
-    color_mapping = get_color_mapping(action_notes, chord_root, staff_index_str)
+    color_mapping = get_color_mapping(action_notes, chord_root, staff_index_str, color_mode)
     color_string = " " + color_mapping
     color_string += "#(define (pitch-equals? p1 p2) \n"
     color_string += "(and \n"
@@ -43,7 +43,7 @@ def create_color_string(action_notes, chord_root, staff_index):
     color_string += "\\once \\override NoteHead #'color = #color-notehead%s \n" % staff_index_str
     return color_string
 
-def get_color_mapping(action_notes, chord_root, staff_index_str):
+def get_color_mapping(action_notes, chord_root, staff_index_str, color_mode):
     color_mapping = ""
     color_mapping += "\n#(define color-mapping%s\n" % staff_index_str
     color_mapping += "(list\n"
@@ -57,7 +57,7 @@ def get_color_mapping(action_notes, chord_root, staff_index_str):
         root = root_dict[root_str]
         alteration_str = alterations_dict[alteration]
         if chord_root:
-            note_color = get_note_color(a.replace("'", "").replace(",",""), chord_root)
+            note_color = get_note_color(a.replace("'", "").replace(",",""), chord_root, color_mode)
         else:
             note_color = "blue"
         color_mapping += "(cons (ly:make-pitch %i %i %s) (x11-color '%s))\n" % ( octave, root, alteration_str, note_color)
@@ -67,26 +67,33 @@ def get_color_mapping(action_notes, chord_root, staff_index_str):
 
 def get_color_dictionary():
     color_dict = {}
-    color_dict[0] = "blue" # LightSlateGrey
-    color_dict[1] = "blue"
-    color_dict[2] = "blue"
-    color_dict[3] = "red"  # kleine terz
-    color_dict[4] = "red" # grosse terz
-    color_dict[5] = "blue"
-    color_dict[6] = "blue"
-    color_dict[7] = "blue" # quinte
-    color_dict[8] = "blue"
-    color_dict[9] = "blue"
-    color_dict[10] = "LimeGreen"
-    color_dict[11] = "LimeGreen"
+    color_dict[0] = "OrangeRed" # c
+    color_dict[1] = "DarkRed" # c#
+    color_dict[2] = "DarkCyan" # d
+    color_dict[3] = "HotPink" # d#
+    color_dict[4] = "DarkOrchid" # e
+    color_dict[5] = "DarkOrange" # f
+    color_dict[6] = "DarkSalmon" # fis
+    color_dict[7] = "blue" #  g
+    color_dict[8] = "YellowGreen" #  gis
+    color_dict[9] = "DarkTurquoise" # a
+    color_dict[10] = "MediumAquamarine" # ais
+    color_dict[11] = "chocolate" # b
     return color_dict
 
-def get_note_color(note_str, chord_root):
-    mingus_chord_root = convert_to_mingus_root_notation(chord_root)
-    mingus_note_str = convert_to_mingus_root_notation(note_str)
 
-    distance = mingus.core.intervals.measure(mingus_chord_root, mingus_note_str) # immer positiv
-    note_color = get_color_dictionary()[distance]
+def get_note_color(note_str, chord_root, color_mode):
+    if color_mode == "chord_root":
+        mingus_reference_note = convert_to_mingus_root_notation("c")
+        mingus_chord_root = convert_to_mingus_root_notation(chord_root)
+        distance = mingus.core.intervals.measure(mingus_reference_note, mingus_chord_root) # always positive
+        note_color = get_color_dictionary()[distance]
+    else:
+        mingus_chord_root = convert_to_mingus_root_notation(chord_root)
+        mingus_note_str = convert_to_mingus_root_notation(note_str)
+
+        distance = mingus.core.intervals.measure(mingus_chord_root, mingus_note_str) # always positive
+        note_color = get_color_dictionary()[distance]
     return note_color
 
 def convert_to_mingus_root_notation(note_str):
@@ -102,7 +109,6 @@ def get_mingus_notes(actions):
         note_string = note_string.replace("es", "b").replace("is", "#")
         note_string = note_string[0].upper() + note_string[1:]
         mingus_note = mingus.containers.Note(note_string, octave + 4)
-        #print("mingus", mingus_note)
         mingus_notes.append(mingus_note)
     return mingus_notes
 

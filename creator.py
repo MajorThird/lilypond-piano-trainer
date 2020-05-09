@@ -129,7 +129,7 @@ def create_midi_notes_output(mingus_notes, output_folder):
         outfile.write(" ".join(mingus_notes) + "\n")
 
 
-def modify_staff_string_with_color(staff_string, staff_index, stream, index, elem, action_notes, chord_root, calculated_belongs_to_chord_without_end):
+def modify_staff_string_with_color(staff_string, staff_index, stream, index, elem, action_notes, chord_root, calculated_belongs_to_chord_without_end, color_mode):
     is_chord_note = calculated_belongs_to_chord_without_end[index] or ">" in elem
     is_first_chord_note = "<" in elem
     if is_chord_note:
@@ -141,7 +141,7 @@ def modify_staff_string_with_color(staff_string, staff_index, stream, index, ele
         modify = True
 
     if modify:
-        color_string = staff_helpers.create_color_string(action_notes, chord_root, staff_index)
+        color_string = staff_helpers.create_color_string(action_notes, chord_root, staff_index, color_mode)
         staff_string += " " + color_string
 
     return staff_string
@@ -191,7 +191,7 @@ def get_initial_key(bar_start, key_changes):
 
 
 
-def create_staff_string(bar_start, bar_end, time, action_notes, chord_symbols, staff, staff_index, active, key_changes, time_signature_changes):
+def create_staff_string(bar_start, bar_end, time, action_notes, chord_symbols, staff, staff_index, active, key_changes, time_signature_changes, color_mode):
     initial_key = get_initial_key(bar_start, key_changes)
     initial_clef = get_initial_clef(bar_start, staff.clef_changes)
     initial_time_signature = get_initial_time_signature(bar_start, time_signature_changes)
@@ -206,7 +206,7 @@ def create_staff_string(bar_start, bar_end, time, action_notes, chord_symbols, s
             if elem_time >= bar_start and elem_time < bar_end:
                 if staff.res_is_note[index] and time == elem_time and not staff.grace_note_stream[index]:
                     chord_root = get_chord_root(chord_symbols, elem_time)
-                    staff_string = modify_staff_string_with_color(staff_string, staff_index, stream, index, elem, action_notes, chord_root, staff.calculated_belongs_to_chord_without_end)
+                    staff_string = modify_staff_string_with_color(staff_string, staff_index, stream, index, elem, action_notes, chord_root, staff.calculated_belongs_to_chord_without_end, color_mode)
                 staff_string += " " + elem
 
         else:
@@ -220,7 +220,7 @@ def create_staff_string(bar_start, bar_end, time, action_notes, chord_symbols, s
                             sub_stream = stream[index][sub_index]
                             sub_calculated_belongs_to_chord_without_end = staff.calculated_belongs_to_chord_without_end[index][sub_index]
                             chord_root = get_chord_root(chord_symbols, elem_time)
-                            sub_staff_string = modify_staff_string_with_color(sub_staff_string, staff_index, sub_stream, sub_elem_index, sub_elem, action_notes, chord_root, sub_calculated_belongs_to_chord_without_end)
+                            sub_staff_string = modify_staff_string_with_color(sub_staff_string, staff_index, sub_stream, sub_elem_index, sub_elem, action_notes, chord_root, sub_calculated_belongs_to_chord_without_end, color_mode)
                         sub_staff_string += " " + sub_elem
                 if sub_staff_string != "":
                     sub_staff_strings.append(sub_staff_string)
@@ -347,9 +347,10 @@ def main():
         staff_strings = []
         mingus_notes = []
         chord_symbols = [c for c in all_chord_symbols if (c.time >= bar_start and c.time < bar_end) ]
+        color_mode = "chord_root"
         for st_index, st in enumerate(staffs):
             current_notes = action_notes[st_index]
-            staff_string = create_staff_string(bar_start, bar_end, time, current_notes, chord_symbols, st, st_index, options["staff_activations"][st_index], key_changes, time_signature_changes)
+            staff_string = create_staff_string(bar_start, bar_end, time, current_notes, chord_symbols, st, st_index, options["staff_activations"][st_index], key_changes, time_signature_changes, color_mode)
 
             show_staffs = [True, True]
             if show_staffs[st_index]:
