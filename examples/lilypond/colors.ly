@@ -20,9 +20,9 @@
     <fis' ais'>4
     <g' b'>4
     <gis' bis'>4
-    <a' cis'>4
-    <ais' cisis'>4
-    <b' dis'>4
+    <a' cis''>4
+    <ais' cisis''>4
+    <b' dis''>4
   }
 
   \new Staff {
