@@ -110,17 +110,13 @@ class SoundGame(object):
         self.display_height = 900
         full_screen = False
         full_screen = True
-        #self.display = pygame.display.set_mode((self.display_width, self.display_height))
         if full_screen:
-            # you can control the starting position of the window with the SDL_VIDEO_WINDOW_POS variable
             os.environ['SDL_VIDEO_WINDOW_POS'] = "0,0"
             pygame.init()
 
             info = pygame.display.Info()
 
-            # and create a borderless window that's as big as the entire screen
             self.display = pygame.display.set_mode((info.current_w, info.current_h), pygame.NOFRAME)
-            #self.display = pygame.display.set_mode((0,0), pygame.FULLSCREEN)
         else:
             self.display = pygame.display.set_mode((0,0))
 
