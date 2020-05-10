@@ -59,7 +59,12 @@ def get_color_mapping(action_notes, chord_root, staff_index_str, color_mode):
         if chord_root:
             note_color = get_note_color(a.replace("'", "").replace(",",""), chord_root, color_mode)
         else:
-            note_color = "OrangeRed"
+            if color_mode == "all_black":
+                note_color = "black"
+            else:
+                note_color = "OrangeRed"
+
+
         color_mapping += "(cons (ly:make-pitch %i %i %s) (x11-color '%s))\n" % ( octave, root, alteration_str, note_color)
 
     color_mapping += "))\n\n"
