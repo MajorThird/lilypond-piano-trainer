@@ -6,8 +6,8 @@ See the program in action in my [YouTube video]().
 ## Requirements
 * Python 2
 * lilyond
-* opencv, lilypond for the creation of lesson (*creator.py*)
-* alsaseq, pygame for the playing mode (*play.py*)
+* opencv, lilypond for the creation of lessons (*creator.py*).
+* alsaseq, pygame for the playing mode (*play.py*).
 
 ## Warnings
 * The practice mode currently only works under Linux because it requires ALSA. I hope that the creation mode already works on other operating systems.
@@ -24,4 +24,4 @@ See the program in action in my [YouTube video]().
 ### How to play/practice
 * Determine the number of your MIDI device with `aconnect --list`. Assign this number to the variable *midi_device_no* in the file *options.cfg*.
 * Run `python play.py` to load all options from *options.cfg*.
-* python `play.py -l 1 -r 1 -p 0 -s pineapple_rag` loads the lesson *pineapple_rag* for the left and right hand with presentation mode turned off. (It still loads *options.cfg* but overwrites the mentioned options.)
+* `python play.py -l 1 -r 1 -p 0 -s pineapple_rag` loads the lesson *pineapple_rag* for the left and right hand with presentation mode turned off. (It still loads *options.cfg* but overwrites the mentioned options.)
