@@ -20,13 +20,16 @@ def get_parser():
         help="path to program options file")
     parser.add_argument("-s", "--song",
         required=False,
-        help="use this song instead of the one in the config file")
+        help="use this song instead of the one in the config file [don't write the extension .ly]")
     parser.add_argument("-r", "--right",
         required=False,
-        help="create song for the right hand [possible values: 0,1] ")
+        help="create song for the right hand [possible values: 0,1]")
     parser.add_argument("-l", "--left",
         required=False,
-        help="create song for the left hand [possible values: 0,1] ")
+        help="create song for the left hand [possible values: 0,1]")
+    parser.add_argument("-i", "--infolder",
+        required=False,
+        help="folder containing the lilypond files")
     return parser
 
 
@@ -55,6 +58,8 @@ def replace_options_from_command_line(options, args):
         options["play_left"] = True if args["left"] in true_strings else False
     if args["right"]:
         options["play_right"] = True if args["right"] in true_strings else False
+    if args["infolder"]:
+        options["in_folder"] = misc_helpers.normalize_folder_string(args["infolder"])
 
 def create_complete_paths(options):
     hand_string = misc_helpers.get_folder_hand_string(options)
