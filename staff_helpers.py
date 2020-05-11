@@ -73,7 +73,7 @@ def get_color_mapping(action_notes, chord_root, staff_index_str, color_mode):
 def get_color_dictionary():
     color_dict = {}
     color_dict[0] = "OrangeRed" # c
-    color_dict[1] = "DarkRed" # c#
+    color_dict[1] = "VioletRed" # c#
     color_dict[2] = "DarkCyan" # d
     color_dict[3] = "HotPink" # d#
     color_dict[4] = "DarkOrchid" # e
@@ -81,7 +81,7 @@ def get_color_dictionary():
     color_dict[6] = "DarkSalmon" # fis
     color_dict[7] = "blue" #  g
     color_dict[8] = "YellowGreen" #  gis
-    color_dict[9] = "DarkTurquoise" # a
+    color_dict[9] = "green" # a
     color_dict[10] = "MediumAquamarine" # ais
     color_dict[11] = "chocolate" # b
     return color_dict
