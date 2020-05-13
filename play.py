@@ -14,14 +14,6 @@ class SoundGame(object):
         self.perform_initializations()
 
 
-    def init_sound_filenames(self):
-        sound_filenames = {}
-        sound_filenames["fx"] = {}
-        sound_filenames["fx"]["wrong"] = "sound_files/soundfx/wrong.mp3"
-        sound_filenames["fx"]["correct"] = "sound_files/soundfx/correct.mp3"
-        return sound_filenames
-
-
     def print_newpage(self):
         newpage_string = '\x1bc'
         print(newpage_string)
@@ -101,9 +93,9 @@ class SoundGame(object):
 
     def init_pygame(self):
         # pygame mixer
-        mixer_buffer = 10
-        pygame.mixer.pre_init(44100, -16, 1, mixer_buffer)
-        pygame.mixer.init()
+        # mixer_buffer = 10
+        # pygame.mixer.pre_init(44100, -16, 1, mixer_buffer)
+        # pygame.mixer.init()
 
         # display
         full_screen = False
@@ -118,7 +110,7 @@ class SoundGame(object):
         else:
             self.display = pygame.display.set_mode((0,0))
 
-        pygame.display.set_caption('Piano Skill Booster Pro v0.1')
+        pygame.display.set_caption('Lilypond Piano Trainer')
 
 
 
@@ -158,7 +150,6 @@ class SoundGame(object):
                     self.is_running = False
 
 
-            #keyboard.show_activations()
             if alsaseq.inputpending():
                 event = alsaseq.input()
                 if event[0] == 6:   # note on event (zumindest bei kleinem midikeyboard)
@@ -176,38 +167,6 @@ def get_config(filename):
     return config
 
 def main():
-    # parser = argparse.ArgumentParser()
-    # parser.add_argument(
-    #     "-c",
-    #     "--config",
-    #     required=False,
-    #     default="options.cfg",
-    #     help="path to program options file")
-    # parser.add_argument(
-    #     "-s",
-    #     "--song",
-    #     required=False,
-    #     help="use this song instead of the one in the config file")
-    #
-    #
-    #
-    # arguments = vars(parser.parse_args())
-    # filename = arguments["config"]
-    # config = get_config(filename)
-    # songs_folder = misc_helpers.normalize_folder_string(
-    #             config["PLAY_OPTIONS"]["songs_folder"])
-    # song_name = config["PLAY_OPTIONS"]["song"]
-    #
-    #
-    #
-    # if arguments["song"]:
-    #     song_name = arguments["song"]
-    #
-    #
-    # hand_string = misc_helpers.get_folder_hand_string(config["PLAY_OPTIONS"])
-    # song_folder = os.path.join(songs_folder, song_name, hand_string) + "/"
-    # print(song_folder)
-
     options = options_play.get_options()
     game = SoundGame(options)
     game.play()
