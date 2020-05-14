@@ -1,6 +1,6 @@
 # LilyPond-piano-trainer
 This program lets you create piano lessons and practice with them. It displays the notes you have to play and follows your playing. The sheet music is created with LilyPond.
-See the program in action in my [YouTube video]().
+See the program in action in my [YouTube video](https://youtu.be/Rm6I6rxtIac).
 
 
 ## Requirements
@@ -21,7 +21,7 @@ notation in relative mode, you must first convert it to absolute mode. You can u
 ## Usage
 ### How to create lessons
 * Run `python creator.py` to load all options from *options.cfg*.
-* `python creator.py -s pineapple_rag -r 1 -l 1` creates the lesson for the song *pineapple_rag* for the left and right hand to be played simultaneously. (It still loads *options.cfg* but overwrites the mentioned options.)
+* `python creator.py -s pineapple_rag -r 1 -l 1` creates the lesson for the song *pineapple_rag* for the left and right hand to be played simultaneously. (It still loads *options.cfg* but overwrites the given options.)
 * `python creator.py -s pineapple_rag -r 1 -l 1 -p 1` does the same in presentation mode.
 
 ### How to play/practice
