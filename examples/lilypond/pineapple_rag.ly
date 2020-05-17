@@ -4,7 +4,13 @@
 \key bes \major
 \time 2/4
   g'16\mf f'8 ees'16 d'( cis' d' c') bes( c' d' f') ~ f'4 g'16 g'8 fis'16 g'( a' bes'8) c'' f' ~ f' f' \break \repeat volta 2 {
-    < bes' d'' g'' >16\mf f''8 ees''16 d''( cis'' d'' c'') bes'( c'' d'' f'') ~ f'' bes'' < f'' d''' >8 < bes' d'' g'' >16 f''8 ees''16 d''( cis'' d'' ees'') < bes' d'' f'' >8\< < bes' f'' >16( d'') < bes' f'' >( d'' < bes' f'' >8\!) bes'16(\f < ees'' bes'' >8) bes'16( < ees'' bes'' >8) bes'16( < ees'' bes'' >) ~ < ees'' bes'' > d'''( bes'' d'') << { f''( e'' f'' g'') } \\ { bes'4 } >> a''16( < c'' f'' >8) a''16( < bes' e'' g'' >8) < bes' e'' a'' >16 < a' f'' > ~ < a' f'' >8 a'16( bes' c'' d'' ees'' f'') \break < bes' d'' g'' >\mf f''8 ees''16 d''( cis'' d'' c'') bes'( c'' d'' f'') ~ f'' bes'' < f'' d''' >8 < bes' d'' g'' >16 f''8 ees''16 d''( cis'' d'' ees'') < bes' d'' f'' >8 < bes' f'' >16 d'' < bes' f'' >( d'' < bes' f'' >8) \pageBreak bes'16(\f < ees'' bes'' >8) bes'16( < ees'' bes'' >8) bes'16( < ees'' bes'' >) ~ < ees'' bes'' > d'''( bes'' f'') d''( f'' g'' bes'')
+    < bes' d'' g'' >16\mf f''8 ees''16 d''( cis'' d'' c'') bes'( c'' d'' f'') ~ f'' bes'' < f'' d''' >8 < bes' d'' g'' >16 f''8 ees''16 d''( cis'' d'' ees'') < bes' d'' f'' >8\< < bes' f'' >16( d'') < bes' f'' >( d'' < bes' f'' >8\!)
+    bes'16(\f
+      < ees'' bes'' >8)
+    bes'16(
+      < ees'' bes'' >8)
+      bes'16( < d'' bes'' >) ~
+      < d'' bes'' > d'''( bes'' d'') << { f''( e'' f'' g'') } \\ { bes'4 } >> a''16( < c'' f'' >8) a''16( < bes' e'' g'' >8) < bes' e'' a'' >16 < a' f'' > ~ < a' f'' >8 a'16( bes' c'' d'' ees'' f'') \break < bes' d'' g'' >\mf f''8 ees''16 d''( cis'' d'' c'') bes'( c'' d'' f'') ~ f'' bes'' < f'' d''' >8 < bes' d'' g'' >16 f''8 ees''16 d''( cis'' d'' ees'') < bes' d'' f'' >8 < bes' f'' >16 d'' < bes' f'' >( d'' < bes' f'' >8) \pageBreak bes'16(\f < ees'' bes'' >8) bes'16( < ees'' bes'' >8) bes'16( < d'' bes'' >) ~ < d'' bes'' > d'''( bes'' f'') d''( f'' g'' bes'')
   } \alternative { { << {
          bes'4 c''16 d''8 bes'16 ~ bes'8[ bes'16^( c''] \revert Stem.direction
          d''[ ees'') < a' ees'' f'' >8]
