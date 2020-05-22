@@ -127,6 +127,7 @@ def get_normalized_staff_strings(staffs):
         s = get_staff_string_without_unwanted_commands(s)
         s = get_with_normalized_spaces(s)
         s = s.replace(" ~", "~")
+        s = get_with_replaced_commands(s)
         s = get_without_repeats(s)
 
         s.replace("  ", " ") # just in case something went wrong
@@ -134,6 +135,12 @@ def get_normalized_staff_strings(staffs):
     return normalized
 
 
+
+def get_with_replaced_commands(s):
+    s = s.replace("\\>", "\\decr")
+    s = s.replace("\\<", "\\cr")
+    s = s.replace("->", "\\accent")
+    return s
 
 def get_with_normalized_spaces(s):
     s = " " + s
@@ -147,9 +154,9 @@ def get_with_normalized_spaces(s):
 def get_staff_string_without_unwanted_commands(s):
     commands = []
     commands.append("\\override Staff.NoteCollision.merge-differently-dotted = ##t")
-    commands.append("\\!")
-    commands.append("\\>")
-    commands.append("\\<")
+    # commands.append("\\!")
+    # commands.append("\\>")
+    # commands.append("\\<")
     commands.append("\\revert NoteColumn.horizontal-shift")
     commands.append("\\revert Stem.direction")
     commands.append("\\override Stem.direction = #-1")

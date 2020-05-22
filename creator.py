@@ -109,7 +109,7 @@ def create_lily_output(step, staff_strings, chord_symbols, output_folder, image_
         if not os.path.isfile(outfilename + ".png"):
             print("ERROR: no PNG written!!!!!!!!!!!!!")
 
-    clean_output_folder(output_folder, del_lily=True)
+    clean_output_folder(output_folder, del_lily=False)
 
 
 
