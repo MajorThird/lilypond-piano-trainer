@@ -41,15 +41,9 @@ class SoundGame(object):
 
         self.midi_notes = []
         read_data_to_container(self.midi_notes, "midi_notes", self.options["song_folder_complete"], int)
-        self.note_names = []
-        read_data_to_container(self.note_names, "mingus_notes", self.options["song_folder_complete"], str)
-        self.timing = []
-        read_data_to_container(self.timing, "timing", self.options["song_folder_complete"], float, no_list=True)
 
         if self.options["presentation_mode"]:
             self.midi_notes.append([])
-            self.note_names.append(["---"])
-            self.timing.append(1.0)
 
     def update_step(self, direction="forward"):
         if direction == "forward":
