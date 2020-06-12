@@ -2,6 +2,7 @@ import alsaseq
 
 import pygame
 import os
+import os.path
 import argparse
 import configparser
 import options_play
@@ -21,23 +22,25 @@ class SoundGame(object):
 
     def load_files(self):
         self.images = []
-        file_index = 0
 
         if self.options["presentation_mode"]:
             filename = self.options["song_folder_complete"] + "/presentation_mode_start.png"
             img = pygame.image.load(filename)
             self.images.append(img)
 
-        while True:
-            filename = self.options["song_folder_complete"] + "/%05i.png" % file_index
-            file_index += 1
-            if os.path.isfile(filename):
+
+        folder = self.options["song_folder_complete"]
+        files = [f for f in os.listdir(folder) if os.path.isfile(os.path.join(folder, f))]
+        files = sorted(files)
+        for f in files:
+            extension = os.path.splitext(f)[1]
+            if extension == ".png" and f != "presentation_mode_start.png":
+                filename = os.path.join(folder, f)
                 img = pygame.image.load(filename)
                 self.images.append(img)
-            else:
-                no_of_steps = len(self.images)
-                print(str(no_of_steps) + " images loaded.")
-                break
+        no_of_steps = len(self.images)
+        print(str(no_of_steps) + " images loaded.")
+
 
         self.midi_notes = []
         read_data_to_container(self.midi_notes, "midi_notes", self.options["song_folder_complete"], int)
